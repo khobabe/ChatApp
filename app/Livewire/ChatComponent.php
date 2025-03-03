@@ -13,6 +13,7 @@ class ChatComponent extends Component
     public $sender_id;
     public $reciever_id;
     public $message = '';
+    public $messages = [];
 
     public function render()
     {
@@ -24,6 +25,20 @@ class ChatComponent extends Component
         $this->sender_id = Auth::id();
         // $this->sender_id = auth()->user()->id();
         $this->reciever_id = $user_id;
+
+        $messages = Message::where(function($query){
+            $query->where('sender_id',$this->sender_id)->where('reciever_id',$this->reciever_id);
+        })->orWhere(function($query){
+            $query->where('sender_id', $this->reciever_id)->where('reciever_id', $this->sender_id);
+        })->with('sender:id,name', 'reciever:id,name')->get();
+
+        // dd($messages->toArray());
+
+        foreach($messages as $message){
+            $this->appendChatMessage($message);
+        }
+
+        // dd($this->messages);
 
         $this->user = User::whereId($user_id)->first();
     }
@@ -38,5 +53,14 @@ class ChatComponent extends Component
         $chatMessage->save();
         
         $this->message = '';
+    }
+
+    public function appendChatMessage($message){
+        $this->messages[] = [
+            'id' => $message->id,
+            'message' => $message->message,
+            'sender' => $message->sender->name,
+            'reciever' => $message->reciever->name,
+        ];
     }
 }

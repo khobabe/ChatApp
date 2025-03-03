@@ -17,21 +17,27 @@
             </svg>
         </div>
 
+        {{-- chat section starts here --}}
         <div class="mt-20 mb-16">
-            <div class="clearfix">
-                <div class="bg-gray-300 w-3/4 mx-4 my-2 p-2 rounded-lg">this is a basic mobile chat layout, build with
-                    tailwind css</div>
-            </div>
-
-            <div class="clearfix">
-                <div class="bg-gray-300 w-3/4 mx-4 my-2 p-2 rounded-lg clearfix">It will be used for a full tutorial
-                    about building a chat app with vue, tailwind and firebase.</div>
-            </div>
-            <div class="clearfix">
-                <div class="bg-green-300 float-right w-3/4 mx-4 my-2 p-2 rounded-lg clearfix">check my twitter to see
-                    when it will be released.</div>
-            </div>
+            @foreach ($messages as $message)
+                @if ($message['sender'] != auth()->user()->name)
+                    <div class="clearfix w-4/4">
+                        <div class="bg-gray-300 mx-4 my-2 p-2 rounded-lg inline-block">
+                            <b>{{ $message['sender'] }} : </b>{{ $message['message'] }}
+                        </div>
+                    </div>
+                @else
+                    <div class="clearfix w-4/4">
+                        <div class="text-right">
+                            <p class="bg-green-300 mx-4 my-2 p-2 rounded-lg inline-block">
+                                {{ $message['message'] }} <b>: You</b>
+                            </p>
+                        </div>
+                    </div>
+                @endif
+            @endforeach
         </div>
+        {{-- chat section ends here --}}
     </div>
 
     <form wire:submit="sendMessage()">
