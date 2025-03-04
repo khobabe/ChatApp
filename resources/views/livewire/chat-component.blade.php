@@ -18,24 +18,33 @@
         </div>
 
         {{-- chat section starts here --}}
-        <div class="mt-20 mb-16">
-            @foreach ($messages as $message)
-                @if ($message['sender'] != auth()->user()->name)
-                    <div class="clearfix w-4/4">
-                        <div class="bg-gray-300 mx-4 my-2 p-2 rounded-lg inline-block">
-                            <b>{{ $message['sender'] }} : </b>{{ $message['message'] }}
+        <div x-data 
+                x-ref="messages" 
+                x-init="$watch('$wire.messages', () => {
+                $nextTick(() => {
+                    $refs.messages.scrollTop = $refs.messages.scrollHeight;
+                });
+            })" 
+            class="overflow-auto h-80 border p-2">
+            <div class="mt-20 mb-16">
+                @foreach ($messages as $message)
+                    @if ($message['sender'] != auth()->user()->name)
+                        <div class="clearfix w-4/4">
+                            <div class="bg-gray-300 mx-4 my-2 p-2 rounded-lg inline-block">
+                                <b>{{ $message['sender'] }} : </b>{{ $message['message'] }}
+                            </div>
                         </div>
-                    </div>
-                @else
-                    <div class="clearfix w-4/4">
-                        <div class="text-right">
-                            <p class="bg-green-300 mx-4 my-2 p-2 rounded-lg inline-block">
-                                {{ $message['message'] }} <b>: You</b>
-                            </p>
+                    @else
+                        <div class="clearfix w-4/4">
+                            <div class="text-right">
+                                <p class="bg-green-300 mx-4 my-2 p-2 rounded-lg inline-block">
+                                    {{ $message['message'] }} <b>: You</b>
+                                </p>
+                            </div>
                         </div>
-                    </div>
-                @endif
-            @endforeach
+                    @endif
+                @endforeach
+            </div>
         </div>
         {{-- chat section ends here --}}
     </div>
