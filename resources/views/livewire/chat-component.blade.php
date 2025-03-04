@@ -40,7 +40,7 @@
         {{-- chat section ends here --}}
     </div>
 
-    <form wire:submit="sendMessage()">
+    <form wire:submit="sendMessage">
         <div class="fixed w-full flex justify-between bg-green-100" style="bottom: 0px;">
             <textarea class="flex-grow m-2 py-2 px-4 mr-1 rounded-full border border-gray-300 bg-gray-200 resize-none"
                 rows="1" wire:model="message" placeholder="Message..." style="outline: none;"></textarea>
